@@ -121,4 +121,19 @@ func printEvents(clientset *kubernetes.Clientset) {
 }
 
 
-	
+//A function name "printPodsAreNotReady" that print pods are not ready state
+func printPodsAreNotReady(clientset *kubernetes.Clientset) {
+	pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		
+		panic(err)
+	}
+	for _, pod := range pods.Items {
+		for _, containerStatus := range pod.Status.ContainerStatuses {
+			if containerStatus.Ready != true {
+				fmt.Printf("Pod %s is not ready and containerStatus.RestartCount is %d\n", pod.Name, containerStatus.RestartCount)
+
+			}
+		}
+	}
+}
